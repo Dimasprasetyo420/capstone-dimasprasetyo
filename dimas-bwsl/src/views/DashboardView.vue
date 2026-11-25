@@ -22,10 +22,12 @@ async function muatStatistik() {
   loading.value = true
   errorMsg.value = ''
   try {
-    statistikRaw.value = await fetchApi('/statistik', {
-      kecamatan: pilihKecamatan.value,
-      desa: pilihDesa.value
-    })
+    const params = new URLSearchParams()
+    if (pilihKecamatan.value) params.set('kecamatan', pilihKecamatan.value)
+    if (pilihDesa.value) params.set('desa', pilihDesa.value)
+
+    const query = params.toString() ? `?${params.toString()}` : ''
+    statistikRaw.value = await fetchApi(`/statistik${query}`)
   } catch (err) {
     errorMsg.value = err.message
   } finally {
