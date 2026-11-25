@@ -34,7 +34,7 @@ async function verifikasiPetugas(req, res, next) {
     return res.status(401).json({ error: 'Akses ditolak: Token login tidak ditemukan.' })
   }
 
- const token = authHeader.split(' ')[1]
+  const token = authHeader.split(' ')[1]
   const { data: { user }, error } = await supabaseAuth.auth.getUser(token)
 
   if (error || !user) {
@@ -74,10 +74,10 @@ app.get('/api/validasi', apiLimiter, verifikasiPetugas, async (req, res) => {
   let query = supabaseAdmin
     .from('users')
     .select('No, Nama, Jenis_Kelamin, Dusun, Rt, Rw, Desa, Kecamatan, Keterangan')
-    .ilike('Nama', kataKunci)
+    .ilike('Nama', `%${kataKunci}%`)
 
-  if (kecamatan) query = query.eq('Kecamatan', kecamatan)
-  if (desa) query = query.eq('Desa', desa)
+  if (kecamatan) query = query.ilike('Kecamatan', kecamatan.trim())
+  if (desa) query = query.ilike('Desa', desa.trim())
 
   const { data, error } = await query
     .order('Kecamatan', { ascending: true })
@@ -112,13 +112,13 @@ app.post('/api/pemilih', apiLimiter, verifikasiPetugas, async (req, res) => {
 
   const dataBaru = {
     No: nomorBaru,
-    Nama: Nama.trim().toUpperCase(),
-    Jenis_Kelamin: Jenis_Kelamin.trim().toUpperCase(),
-    Dusun: Dusun ? Dusun.trim().toUpperCase() : '',
-    Rt: Rt ? String(Rt).trim().padStart(3, '0') : '',
-    Rw: Rw ? String(Rw).trim().padStart(3, '0') : '',
-    Desa: Desa.trim().toUpperCase(),
-    Kecamatan: Kecamatan.trim().toUpperCase(),
+    Nama: Nama.trim(),
+    Jenis_Kelamin: Jenis_Kelamin.trim(),
+    Dusun: Dusun ? Dusun.trim() : '',
+    Rt: Rt ? String(Rt).trim() : '',
+    Rw: Rw ? String(Rw).trim() : '',
+    Desa: Desa.trim(),
+    Kecamatan: Kecamatan.trim(),
     Keterangan: Keterangan ? Keterangan.trim() : 'Pemilih Pemula (17 Tahun)'
   }
 
@@ -143,13 +143,13 @@ app.put('/api/pemilih/:no', apiLimiter, verifikasiPetugas, async (req, res) => {
   }
 
   const dataUpdate = {
-    ...(Nama !== undefined && { Nama: Nama.trim().toUpperCase() }),
-    ...(Jenis_Kelamin !== undefined && { Jenis_Kelamin: Jenis_Kelamin.trim().toUpperCase() }),
-    ...(Dusun !== undefined && { Dusun: Dusun.trim().toUpperCase() }),
-    ...(Rt !== undefined && { Rt: String(Rt).trim().padStart(3, '0') }),
-    ...(Rw !== undefined && { Rw: String(Rw).trim().padStart(3, '0') }),
-    ...(Desa !== undefined && { Desa: Desa.trim().toUpperCase() }),
-    ...(Kecamatan !== undefined && { Kecamatan: Kecamatan.trim().toUpperCase() }),
+    ...(Nama !== undefined && { Nama: Nama.trim() }),
+    ...(Jenis_Kelamin !== undefined && { Jenis_Kelamin: Jenis_Kelamin.trim() }),
+    ...(Dusun !== undefined && { Dusun: Dusun.trim() }),
+    ...(Rt !== undefined && { Rt: String(Rt).trim() }),
+    ...(Rw !== undefined && { Rw: String(Rw).trim() }),
+    ...(Desa !== undefined && { Desa: Desa.trim() }),
+    ...(Kecamatan !== undefined && { Kecamatan: Kecamatan.trim() }),
     ...(Keterangan !== undefined && { Keterangan: Keterangan.trim() })
   }
 
@@ -165,6 +165,7 @@ app.put('/api/pemilih/:no', apiLimiter, verifikasiPetugas, async (req, res) => {
   console.log(`[AUDIT UPDATE] ${req.user.email} mengubah data No #${no} (${data.Nama}) -> Keterangan: "${data.Keterangan}"`)
   res.json({ message: 'Data pemilih berhasil diperbarui.', data })
 })
+
 app.listen(PORT, () => {
   console.log(`Backend API PDPB berjalan di http://localhost:${PORT}`)
 })
