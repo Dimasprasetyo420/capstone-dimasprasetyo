@@ -1,0 +1,26 @@
+# Dependencies di semua subfolder
+**/node_modules/
+node_modules/
+
+# Build output frontend
+**/dist/
+dist/
+*.local
+
+# File rahasia & environment variables (WAJIB diabaikan)
+.env
+**/.env
+.env.*
+**/.env.*
+!.env.example
+!**/.env.example
+
+# Editor & OS files
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+npm-debug.log*
