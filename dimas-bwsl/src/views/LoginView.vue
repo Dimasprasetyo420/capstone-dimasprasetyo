@@ -30,7 +30,7 @@ async function handleLogin() {
 <template>
   <div class="login-wrapper">
     <div class="login-card">
-      <h2>Login Petugas PDPB</h2>
+      <h2>Login Petugas</h2>
       <p class="subtitle">Masuk untuk mengakses Dashboard & Validasi Data Pemilih 2026</p>
 
       <div v-if="errorMsg" class="alert-error">{{ errorMsg }}</div>
