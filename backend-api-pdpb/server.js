@@ -166,6 +166,10 @@ app.put('/api/pemilih/:no', apiLimiter, verifikasiPetugas, async (req, res) => {
   res.json({ message: 'Data pemilih berhasil diperbarui.', data })
 })
 
-app.listen(PORT, () => {
-  console.log(`Backend API PDPB berjalan di http://localhost:${PORT}`)
-})
+if (process.env.NODE_ENV !== 'production') {
+  app.listen(PORT, () => {
+    console.log(`Backend API PDPB berjalan di http://localhost:${PORT}`)
+  })
+}
+
+export default app
