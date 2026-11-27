@@ -28,8 +28,8 @@ async function handleLogout() {
     <header v-if="session" class="navbar">
       <div class="nav-container">
         <div class="brand">
-          <strong>PDPB 2026</strong>
-          <span>KPU Kab. Pasuruan</span>
+          <strong>SIPANDA</strong>
+          <span>Sistem Informasi Pemantauan Data Pemilih</span>
         </div>
 
         <nav class="nav-links">
